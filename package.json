@@ -12,7 +12,8 @@
     "author": "shu zOMG chen <shu.chen@freelancedreams.com>",
     "main": "./src/index.js",
     "dependencies": {
-        "ffi": ">=0.5.0"
+        "ffi": ">=0.5.0",
+		"ref": ">=0.0.20"
     },
     "devDependencies": {
     },

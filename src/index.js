@@ -1,14 +1,16 @@
 var ffi = require('ffi')
+var ref = require('ref')
+
 var lib = ffi.Library(null, {
 	popen: ['pointer', ['string', 'string']],
-	pclose: ['void', ['pointer']],
+	pclose: ['int', ['pointer']],
 	fgets: ['string', ['string', 'int', 'pointer']]
 });
 
-function execSync(cmd, cb) {
+module.exports = function execSync(cmd, cb) {
 	var buffer = new Buffer(1024);
 	var result;
-	var ph = lib.popen(cmd, 'r');
+	var ph = lib.popen(cmd + " 2>&1", 'r');
 	if (!ph) {
 		throw new Error('execSync error calling: ' + cmd);
 	}
@@ -23,6 +25,7 @@ function execSync(cmd, cb) {
 			cb(buffer.readCString());
 		}
 	}
-	lib.pclose(ph);
-	return result;
+	var exit = lib.pclose(ph);
+	return {'exit': exit, 'data': result}
 }
+
